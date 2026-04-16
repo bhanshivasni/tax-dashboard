@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Employee Tax Savings Guide 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#F0F2F5;color:#111827;font-size:13px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 14px 40px}
+
+.hero{background:#0F1F2E;color:#fff;border-radius:14px;padding:24px 28px 20px;margin-bottom:16px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.hero h1{font-size:20px;font-weight:700;letter-spacing:-0.4px;line-height:1.3;color:#fff}
+.hero-sub{font-size:12px;color:#9CA3AF;margin-top:3px}
+.hero-badge{background:#059669;color:#fff;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+.hero-stat{background:rgba(255,255,255,0.07);border-radius:8px;padding:10px 12px}
+.hero-stat-val{font-size:17px;font-weight:700;color:#34D399}
+.hero-stat-label{font-size:10px;color:#9CA3AF;margin-top:2px}
+
+.sal-block{background:#fff;border:1.5px solid #E5E7EB;border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.ctrl-label{font-size:10px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em}
+.sal-input-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:180px}
+.sal-prefix{font-size:18px;font-weight:700;color:#9CA3AF}
+.sal-input{border:1.5px solid #D1D5DB;border-radius:8px;padding:8px 12px;font-size:18px;font-weight:700;color:#111827;width:160px;outline:none;transition:border .15s;font-family:inherit}
+.sal-input:focus{border-color:#4F46E5}
+.sal-formatted{font-size:12px;color:#9CA3AF;margin-left:4px}
+.sal-quick{display:flex;gap:6px;flex-wrap:wrap}
+.sq{padding:4px 10px;border-radius:16px;border:1px solid #E5E7EB;background:#F9FAFB;cursor:pointer;font-size:11px;font-weight:600;color:#6B7280;transition:all .12s;user-select:none}
+.sq:hover{border-color:#4F46E5;color:#4F46E5;background:#EEF2FF}
+.sq.active{border-color:#4F46E5;color:#4F46E5;background:#EEF2FF}
+
+.slider-wrap{position:relative;margin-top:6px}
+.slider-track{position:relative;height:6px;background:#E5E7EB;border-radius:3px;cursor:pointer;margin-bottom:6px}
+.slider-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#4F46E5,#059669);border-radius:3px;pointer-events:none}
+.slider-input{position:absolute;left:0;top:-5px;width:100%;height:16px;opacity:0;cursor:pointer;margin:0;-webkit-appearance:none;appearance:none}
+.slider-labels{display:flex;justify-content:space-between;font-size:9px;color:#9CA3AF;font-weight:600}
+.slider-thumb-label{position:absolute;top:-26px;transform:translateX(-50%);background:#0F1F2E;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;pointer-events:none;white-space:nowrap}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px;align-items:flex-end}
+.ctrl-group{display:flex;flex-direction:column;gap:6px}
+.rtabs{display:flex;border:1.5px solid #D1D5DB;border-radius:8px;overflow:hidden;background:#fff}
+.rtab{padding:7px 18px;cursor:pointer;font-size:12px;font-weight:600;color:#6B7280;transition:all .15s;white-space:nowrap;border-right:1px solid #D1D5DB;user-select:none}
+.rtab:last-child{border-right:none}
+.rtab.a-old{background:#4F46E5;color:#fff}
+.rtab.a-new{background:#059669;color:#fff}
+.rtab.a-cmp{background:#0F1F2E;color:#fff}
+
+.summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.sc{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px}
+.sc-label{font-size:10px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.sc-val{font-size:18px;font-weight:800;color:#111827}
+.sc-val.g{color:#059669}.sc-val.r{color:#DC2626}.sc-val.b{color:#4F46E5}.sc-val.t{color:#0891B2}
+.sc-sub{font-size:10px;color:#9CA3AF;margin-top:2px}
+
+.grid{display:grid;gap:12px;margin-bottom:14px}
+.grid.cmp{grid-template-columns:1fr 1fr}
+.grid.single{grid-template-columns:1fr}
+@media(max-width:640px){.grid.cmp{grid-template-columns:1fr}}
+
+.col{background:#fff;border-radius:12px;border:1.5px solid #E5E7EB;overflow:hidden}
+.col-hdr{padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.col-hdr.old{background:#4F46E5;color:#fff}
+.col-hdr.new{background:#059669;color:#fff}
+.col-hdr-title{font-size:14px;font-weight:700}
+.col-hdr-total{font-size:11px;font-weight:600;opacity:.9}
+
+.bitem{padding:11px 16px;border-bottom:1px solid #F3F4F6;display:flex;flex-direction:column;gap:3px}
+.bitem:last-child{border-bottom:none}
+.brow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.bname{font-size:12px;font-weight:700;color:#111827;flex:1;line-height:1.3}
+.bamts{text-align:right;flex-shrink:0}
+.bexempt{font-size:10px;color:#9CA3AF}
+.bsaved{font-size:13px;font-weight:800;color:#059669}
+.bsaved.na{font-size:10px;color:#D1D5DB;font-weight:500}
+.btag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;margin-bottom:2px}
+.tb{background:#FFFBEB;color:#92400E;border:1px solid #FDE68A}
+.to{background:#EEF2FF;color:#3730A3;border:1px solid #C7D2FE}
+.tu{background:#FEF9C3;color:#713F12;border:1px solid #FDE047}
+.bdesc{font-size:10px;color:#9CA3AF;line-height:1.4}
+.bact{font-size:10px;color:#374151;background:#F9FAFB;border-radius:5px;padding:4px 8px;margin-top:3px;border-left:2px solid #059669;line-height:1.4}
+
+.chart-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:16px;margin-bottom:12px}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:12px;color:#111827}
+.recommend{background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;padding:14px 18px;margin-bottom:12px}
+.rec-title{font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px}
+.rec-text{font-size:11px;color:#064E3B;line-height:1.7}
+.footnote{font-size:10px;color:#9CA3AF;text-align:center;line-height:1.6;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <h1>Employee Tax Savings Guide — 2026</h1>
+      <div class="hero-sub">Maximise take-home pay under the new Income Tax Act, 2025 · Effective April 1, 2026</div>
+    </div>
+    <span class="hero-badge">IT Rules, 2026</span>
+  </div>
+  <div class="hero-stats" id="heroStats"></div>
+</div>
+
+<div class="sal-block">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+    <div>
+      <div class="ctrl-label" style="margin-bottom:6px">Annual Salary (Gross CTC)</div>
+      <div class="sal-input-wrap">
+        <span class="sal-prefix">₹</span>
+        <input class="sal-input" type="number" id="salInput" min="0" max="10000000" step="10000" value="1000000"/>
+        <span class="sal-formatted" id="salFormatted">₹10 Lakh</span>
+      </div>
+    </div>
+    <div>
+      <div class="ctrl-label" style="margin-bottom:6px">Quick select</div>
+      <div class="sal-quick">
+        <span class="sq" onclick="jumpTo(600000)">₹6L</span>
+        <span class="sq" onclick="jumpTo(1000000)">₹10L</span>
+        <span class="sq" onclick="jumpTo(1500000)">₹15L</span>
+        <span class="sq" onclick="jumpTo(2000000)">₹20L</span>
+        <span class="sq" onclick="jumpTo(3000000)">₹30L</span>
+        <span class="sq" onclick="jumpTo(5000000)">₹50L</span>
+        <span class="sq" onclick="jumpTo(7500000)">₹75L</span>
+        <span class="sq" onclick="jumpTo(10000000)">₹1Cr</span>
+      </div>
+    </div>
+  </div>
+  <div class="slider-wrap">
+    <div class="slider-track" id="sliderTrack">
+      <div class="slider-fill" id="sliderFill"></div>
+      <div class="slider-thumb-label" id="thumbLabel">₹10L</div>
+      <input class="slider-input" type="range" id="salSlider" min="0" max="10000000" step="10000" value="1000000"/>
+    </div>
+    <div class="slider-labels">
+      <span>₹0</span><span>₹25L</span><span>₹50L</span><span>₹75L</span><span>₹1 Crore</span>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="ctrl-label">Tax Regime View</div>
+    <div class="rtabs">
+      <div class="rtab" data-r="old" onclick="setRegime('old')">Old Regime</div>
+      <div class="rtab" data-r="new" onclick="setRegime('new')">New Regime</div>
+      <div class="rtab a-cmp" data-r="cmp" onclick="setRegime('cmp')">Compare Both</div>
+    </div>
+  </div>
+</div>
+
+<div class="summary" id="summary"></div>
+<div class="grid cmp" id="mainGrid"></div>
+<div class="chart-wrap">
+  <div class="chart-title">Tax saved per benefit component (₹) — both regimes</div>
+  <canvas id="chart" height="180"></canvas>
+</div>
+<div class="recommend" id="recBox"></div>
+<div class="footnote">Estimates are indicative. Assumes metro city HRA, basic = 40% of gross, 2 children for education/hostel allowances, NPS employer contribution at 14% of basic, and rent paid = 25% of gross salary. All figures per annum. Consult a qualified tax advisor for individual planning. Based on Income Tax Rules, 2026.</div>
+
+</div>
+
+<script>
+const DEFS=[
+  {id:"std",name:"Standard Deduction",r:["old","new"],ex:()=>75000,tl:"Both regimes",tc:"tb",desc:"Flat ₹75,000 for all salaried. Zero documentation needed.",act:"Automatic — no HR action required."},
+  {id:"gift",name:"Gift Vouchers & Reward Cards",r:["old","new"],ex:()=>15000,tl:"Both · New limit ↑",tc:"tu",desc:"Festival hampers, spot awards, milestone gifts, prepaid gift cards. Tripled from ₹5,000.",act:"Issue via digital rewards platform. Maintain per-employee audit trail."},
+  {id:"nps",name:"Employer NPS Contribution",r:["old","new"],ex:(s)=>Math.round(s*0.40*0.14),tl:"Both · High impact",tc:"tb",desc:"14% of Basic salary contributed by employer to NPS — deductible in both regimes.",act:"Register employees on NPS. Contribute 14% of Basic+DA as part of CTC."},
+  {id:"meal",name:"Meal Vouchers / Food Cards",r:["old"],ex:()=>104800,tl:"Old · 4× increase",tc:"to",desc:"₹200/meal × 2 meals × ~262 working days = ₹1.05L/year.",act:"Load monthly digital meal cards. Applicable for old regime employees only."},
+  {id:"hra",name:"House Rent Allowance (HRA)",r:["old"],ex:(s)=>Math.round(s*0.16),tl:"Old · 8 cities now",tc:"to",desc:"50% of Basic in 8 metros — now includes Bengaluru, Hyderabad, Pune, Ahmedabad.",act:"Structure HRA in CTC. Collect rent receipts + landlord PAN via Form 124."},
+  {id:"edu",name:"Children Education Allowance",r:["old"],ex:()=>72000,tl:"Old · 30× increase",tc:"to",desc:"₹3,000/month per child for up to 2 children = ₹72,000/year. Was ₹1,200 earlier.",act:"Add to salary structure. Employee declares via Form 124."},
+  {id:"hostel",name:"Hostel Expenditure Allowance",r:["old"],ex:()=>216000,tl:"Old · 30× increase",tc:"to",desc:"₹9,000/month per child for up to 2 children = ₹2.16L/year.",act:"Add for eligible employees with hostel-going children. Declare via Form 124."},
+  {id:"80c",name:"Section 80C Investments",r:["old"],ex:()=>150000,tl:"Old regime",tc:"to",desc:"EPF, PPF, ELSS, life insurance, NSC, home loan principal — up to ₹1.5L/year.",act:"Accept 80C declarations via Form 124. Enable flexi benefit and ELSS plans."},
+  {id:"80d",name:"Health Insurance (80D)",r:["old"],ex:()=>50000,tl:"Old regime",tc:"to",desc:"₹25,000 self/family + ₹25,000 parents' premium per year.",act:"Provide group health insurance. Collect premium receipts via Form 124."},
+  {id:"lta",name:"Leave Travel Allowance (LTA)",r:["old"],ex:()=>30000,tl:"Old regime",tc:"to",desc:"2 domestic trips per 4-year block for employee + family. ~₹30,000/year average.",act:"Include LTA in CTC. Collect travel bills and boarding passes."},
+  {id:"loan",name:"Interest-Free Employer Loan",r:["old","new"],ex:()=>0,tl:"Both · Benefit",tc:"tb",desc:"Loans up to ₹2L: zero perquisite tax. Medical treatment loans: fully uncapped.",act:"Offer salary advances/emergency loans up to ₹2L at zero tax cost."},
+];
+
+function newTax(inc){
+  if(inc<=0)return 0;
+  let t=0,r=inc;
+  [[400000,0],[400000,.05],[400000,.10],[400000,.15],[400000,.20],[400000,.25],[1e10,.30]].forEach(([s,rt])=>{if(r>0){t+=Math.min(r,s)*rt;r-=s;}});
+  if(inc<=1200000)t=Math.max(0,t-60000);
+  return Math.round(t*1.04);
+}
+function oldTax(inc){
+  if(inc<=0)return 0;
+  let t=inc<=250000?0:inc<=500000?(inc-250000)*.05:inc<=1000000?12500+(inc-500000)*.20:112500+(inc-1000000)*.30;
+  if(inc<=500000)t=Math.max(0,t-12500);
+  return Math.round(t*1.04);
+}
+function marginal(sal,rg){
+  const inc=Math.max(0,sal-75000);
+  if(rg==="new"){if(inc<=400000)return 0;if(inc<=800000)return.052;if(inc<=1200000)return.104;if(inc<=1600000)return.156;if(inc<=2000000)return.208;if(inc<=2400000)return.26;return.312;}
+  else{if(inc<=250000)return 0;if(inc<=500000)return.052;if(inc<=1000000)return.208;return.312;}
+}
+function inrFmt(n){
+  if(n<=0)return"₹0";
+  if(n>=10000000)return"₹"+(n/10000000).toFixed(2).replace(/\.?0+$/,"")+"Cr";
+  if(n>=100000)return"₹"+(n/100000).toFixed(2).replace(/\.?0+$/,"")+"L";
+  if(n>=1000)return"₹"+Math.round(n/1000)+"K";
+  return"₹"+n;
+}
+function fmtSalLabel(v){
+  if(v===0)return"₹0";
+  if(v>=10000000)return"₹1 Crore";
+  if(v>=100000)return"₹"+(v/100000).toFixed(1).replace(/\.0$/,"")+" Lakh";
+  if(v>=1000)return"₹"+(v/1000)+"K";
+  return"₹"+v;
+}
+function getComps(sal,rg){
+  const m=marginal(sal,rg);
+  return DEFS.filter(d=>d.r.includes(rg)).map(d=>({...d,exemption:d.ex(sal),taxSaved:d.ex(sal)>0?Math.round(d.ex(sal)*m):0}));
+}
+function calcSavings(sal,rg){
+  const comps=getComps(sal,rg);
+  const base=rg==="new"?newTax(Math.max(0,sal-75000)):oldTax(Math.max(0,sal-75000));
+  const addl=comps.filter(c=>c.id!=="std"&&c.exemption>0).reduce((s,c)=>s+c.exemption,0);
+  const struct=rg==="new"?newTax(Math.max(0,sal-75000-addl)):oldTax(Math.max(0,sal-75000-addl));
+  return{baseTax:base,structTax:struct,saving:Math.max(0,base-struct),monthly:Math.round(Math.max(0,base-struct)/12)};
+}
+
+let salary=1000000,regime="cmp",chartInst=null,debounceTimer=null;
+
+const sliderEl=document.getElementById("salSlider");
+const inputEl=document.getElementById("salInput");
+const fillEl=document.getElementById("sliderFill");
+const thumbEl=document.getElementById("thumbLabel");
+const fmtEl=document.getElementById("salFormatted");
+
+function updateSliderVisuals(v){
+  const pct=(v/10000000)*100;
+  fillEl.style.width=pct+"%";
+  thumbEl.style.left=pct+"%";
+  thumbEl.textContent=fmtSalLabel(v);
+  fmtEl.textContent=fmtSalLabel(v);
+}
+sliderEl.addEventListener("input",()=>{
+  const v=parseInt(sliderEl.value)||0;
+  salary=v;inputEl.value=v;
+  updateSliderVisuals(v);updateQuickBtns(v);debouncedRender();
+});
+inputEl.addEventListener("input",()=>{
+  let v=parseInt(inputEl.value)||0;
+  v=Math.min(Math.max(v,0),10000000);
+  salary=v;sliderEl.value=v;
+  updateSliderVisuals(v);updateQuickBtns(v);debouncedRender();
+});
+function jumpTo(v){
+  salary=v;sliderEl.value=v;inputEl.value=v;
+  updateSliderVisuals(v);updateQuickBtns(v);render();
+}
+function updateQuickBtns(v){
+  const presets=[600000,1000000,1500000,2000000,3000000,5000000,7500000,10000000];
+  document.querySelectorAll(".sq").forEach((el,i)=>el.classList.toggle("active",presets[i]===v));
+}
+function debouncedRender(){
+  clearTimeout(debounceTimer);debounceTimer=setTimeout(render,120);
+}
+function setRegime(r){
+  regime=r;
+  document.querySelectorAll(".rtab").forEach(t=>{t.className="rtab";if(t.dataset.r===r)t.classList.add("a-"+r);});
+  render();
+}
+function renderHero(){
+  const os=calcSavings(salary,"old"),ns=calcSavings(salary,"new");
+  const npsEx=Math.round(salary*0.40*0.14);
+  document.getElementById("heroStats").innerHTML=`
+    <div class="hero-stat"><div class="hero-stat-val">${inrFmt(os.saving)}</div><div class="hero-stat-label">Max savings — Old Regime</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">${inrFmt(ns.saving)}</div><div class="hero-stat-label">Max savings — New Regime</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">₹15,000</div><div class="hero-stat-label">Gift voucher exemption (both)</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">${inrFmt(npsEx)}</div><div class="hero-stat-label">Employer NPS benefit (both)</div></div>
+  `;
+}
+function renderSummary(){
+  const os=calcSavings(salary,"old"),ns=calcSavings(salary,"new");
+  let html="";
+  if(regime==="cmp"){
+    html=`
+      <div class="sc"><div class="sc-label">Annual Salary</div><div class="sc-val">${inrFmt(salary)}</div></div>
+      <div class="sc"><div class="sc-label">Old — Without structuring</div><div class="sc-val r">${inrFmt(os.baseTax)}</div><div class="sc-sub">Tax payable/yr</div></div>
+      <div class="sc"><div class="sc-label">Old — With structuring</div><div class="sc-val b">${inrFmt(os.structTax)}</div><div class="sc-sub">After all benefits</div></div>
+      <div class="sc"><div class="sc-label">Old Regime Savings</div><div class="sc-val g">${inrFmt(os.saving)}</div><div class="sc-sub">≈ ${inrFmt(os.monthly)}/month</div></div>
+      <div class="sc"><div class="sc-label">New — Without structuring</div><div class="sc-val r">${inrFmt(ns.baseTax)}</div><div class="sc-sub">Tax payable/yr</div></div>
+      <div class="sc"><div class="sc-label">New — With structuring</div><div class="sc-val t">${inrFmt(ns.structTax)}</div><div class="sc-sub">After all benefits</div></div>
+      <div class="sc"><div class="sc-label">New Regime Savings</div><div class="sc-val g">${inrFmt(ns.saving)}</div><div class="sc-sub">≈ ${inrFmt(ns.monthly)}/month</div></div>
+    `;
+  } else {
+    const s=regime==="old"?os:ns;
+    const cv=regime==="old"?"b":"t";
+    html=`
+      <div class="sc"><div class="sc-label">Annual Salary</div><div class="sc-val">${inrFmt(salary)}</div></div>
+      <div class="sc"><div class="sc-label">Without structuring</div><div class="sc-val r">${inrFmt(s.baseTax)}</div><div class="sc-sub">Tax payable/yr</div></div>
+      <div class="sc"><div class="sc-label">With structuring</div><div class="sc-val ${cv}">${inrFmt(s.structTax)}</div><div class="sc-sub">After all benefits</div></div>
+      <div class="sc"><div class="sc-label">Potential Savings</div><div class="sc-val g">${inrFmt(s.saving)}</div><div class="sc-sub">≈ ${inrFmt(s.monthly)}/month</div></div>
+    `;
+  }
+  document.getElementById("summary").innerHTML=html;
+}
+function colHTML(comps,label,cls){
+  const totalSaved=comps.reduce((s,c)=>s+c.taxSaved,0);
+  const items=comps.map(c=>`
+    <div class="bitem">
+      <span class="btag ${c.tc}">${c.tl}</span>
+      <div class="brow">
+        <div class="bname">${c.name}</div>
+        <div class="bamts">
+          <div class="bexempt">${c.exemption>0?inrFmt(c.exemption)+"/yr":"Benefit"}</div>
+          <div class="bsaved ${c.taxSaved===0?"na":""}">${c.taxSaved>0?"Saves "+inrFmt(c.taxSaved):"—"}</div>
+        </div>
+      </div>
+      <div class="bdesc">${c.desc}</div>
+      <div class="bact">${c.act}</div>
+    </div>
+  `).join("");
+  return`<div class="col"><div class="col-hdr ${cls}"><span class="col-hdr-title">${label}</span><span class="col-hdr-total">Potential: ${inrFmt(totalSaved)}/yr</span></div>${items}</div>`;
+}
+function renderGrid(){
+  const g=document.getElementById("mainGrid");
+  if(regime==="cmp"){
+    g.className="grid cmp";
+    g.innerHTML=colHTML(getComps(salary,"old"),"Old Tax Regime","old")+colHTML(getComps(salary,"new"),"New Tax Regime","new");
+  } else {
+    g.className="grid single";
+    g.innerHTML=colHTML(getComps(salary,regime),regime==="old"?"Old Tax Regime":"New Tax Regime",regime==="old"?"old":"new");
+  }
+}
+function renderChart(){
+  const oc=getComps(salary,"old").filter(c=>c.id!=="std"&&c.id!=="loan"&&c.taxSaved>0);
+  const nc=getComps(salary,"new").filter(c=>c.id!=="std"&&c.id!=="loan"&&c.taxSaved>0);
+  const ids=[...new Set([...oc,...nc].map(c=>c.id))];
+  const SHORT={gift:"Gift Cards",nps:"Emp NPS",meal:"Meal Vouchers",hra:"HRA",edu:"Child Edu.",hostel:"Hostel",["80c"]:"Sec 80C",["80d"]:"Health Ins.",lta:"LTA"};
+  const ctx=document.getElementById("chart").getContext("2d");
+  if(chartInst)chartInst.destroy();
+  if(ids.length===0){ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);return;}
+  chartInst=new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:ids.map(id=>SHORT[id]||id),
+      datasets:[
+        {label:"Old Regime",data:ids.map(id=>oc.find(c=>c.id===id)?.taxSaved||0),backgroundColor:"#6366F1",borderRadius:4,borderSkipped:false},
+        {label:"New Regime",data:ids.map(id=>nc.find(c=>c.id===id)?.taxSaved||0),backgroundColor:"#059669",borderRadius:4,borderSkipped:false},
+      ],
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:"top",labels:{font:{size:11},boxWidth:12,padding:12}},
+        tooltip:{callbacks:{label:(c)=>` ${c.dataset.label}: ${c.raw>0?inrFmt(c.raw):"Not applicable"}`}},
+      },
+      scales:{
+        y:{beginAtZero:true,ticks:{callback:(v)=>inrFmt(v),font:{size:10}},grid:{color:"#F3F4F6"}},
+        x:{ticks:{font:{size:10},maxRotation:30},grid:{display:false}},
+      },
+    },
+  });
+}
+function renderRec(){
+  if(salary===0){document.getElementById("recBox").innerHTML=`<div class="rec-title">Enter a salary above to see recommendations.</div>`;return;}
+  const os=calcSavings(salary,"old"),ns=calcSavings(salary,"new");
+  const winner=os.saving>=ns.saving?"Old Regime":"New Regime";
+  const diff=Math.abs(os.saving-ns.saving);
+  const nps=Math.round(salary*0.40*0.14);
+  const salLabel=fmtSalLabel(salary);
+  document.getElementById("recBox").innerHTML=`
+    <div class="rec-title">HR Action Checklist — ${salLabel} per year</div>
+    <div class="rec-text">
+      <b>Universal (both regimes):</b> Issue gift vouchers / reward cards up to ₹15,000/year per employee. Enrol in employer NPS — contributes ${inrFmt(nps)}/year in tax-free benefit at this salary. Offer interest-free loans up to ₹2L for emergencies (zero perquisite tax).<br><br>
+      <b>Old regime add-ons:</b> Structure meal cards (₹200/meal), HRA, children's education (₹3K/month) &amp; hostel allowance (₹9K/month), Section 80C, health insurance (80D), and LTA in the CTC. Collect declarations via Form 124 (replaces Form 12BB).<br><br>
+      <b>Verdict at ${salLabel}:</b> The <b>${winner}</b> offers approximately ${inrFmt(diff)} more in annual savings. ${diff<10000?"The difference is small — regime choice should factor in individual investment patterns.":diff<50000?"Recommend modelling individual deductions before the employee commits to a regime.":"The gap is significant — share a personalised tax comparison with each employee before April 1."}
+    </div>
+  `;
+}
+function render(){
+  renderHero();renderSummary();renderGrid();renderChart();renderRec();
+}
+updateSliderVisuals(salary);
+updateQuickBtns(salary);
+render();
+</script>
+</body>
+</html>
